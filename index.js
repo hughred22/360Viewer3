@@ -2,7 +2,6 @@ import {
   Engine,
   Scene,
   Vector3,
-  HemisphericLight,
   Texture,
   PhotoDome,
   VideoDome,
@@ -44,7 +43,6 @@ const scene = new Scene(engine);
 //var xrHelper = scene.createDefaultXRExperienceAsync();
 //var vrHelper = scene.createDefaultVRExperience();
 var vrHelper = scene.createDefaultVRExperience({createDeviceOrientationCamera:false}); 
-//new HemisphericLight("hemiLight", new Vector3(0, 1, 0));
 
 const camera = new UniversalCamera(
   "camera",
@@ -75,19 +73,6 @@ var dome = new PhotoDome(
 );
 dome.imageMode = PhotoDome.MODE_MONOSCOPIC;
 
-// Create the VideoDome
-// var videoDome = new VideoDome(
-//   "videoSphere",
-//   lakeTahao8k360video,
-//   {
-//     resolution: 64,
-//     size: 1000,
-//     clickToPlay: true,
-//     useDirectMapping: false
-//   },
-//   scene
-// );
-//videoDome.imageMode = VideoDome.MODE_TOPBOTTOM;
 vrHelper.enableInteractions();
 
 // Create a GUI texture
@@ -261,17 +246,6 @@ const loadNewVideoTexture = (video) => {
   newTexture.onLoadObservable.add(() => {
     dome.dispose();
 
-    // Create a new dome with the new texture
-    // dome = new PhotoDome(
-    //   "sphere",
-    //   image,
-    //   {
-    //     resolution: 128,
-    //     size: 1000,
-    //     useDirectMapping: false
-    //   },
-    //   scene
-    // );
     // Create the VideoDome
     dome = new VideoDome(
       "videoSphere",
@@ -322,62 +296,7 @@ fadeInAnimation.setKeys([
   { frame: 0, value: 0 },
   { frame: 120, value: 1 }
 ]);
-//Assume `scene` is your Babylon.js scene
 
-// Create the zoom in button
-// var zoomInButton = Button.CreateSimpleButton(
-//   "zoomInButton",
-//   "Zoom In"
-// );
-// zoomInButton.paddingTopInPixels = 50;
-// zoomInButton.width = "100px";
-// zoomInButton.height = "90px";
-// zoomInButton.color = "white";
-// zoomInButton.background = "blue";
-// zoomInButton.onPointerUpObservable.add(() => {
-//   camera.fov = Math.max(0.1, camera.fov - 0.1);
-// });
-// stackPanel.addControl(zoomInButton);
-
-// Create the zoom out button
-// var zoomOutButton = Button.CreateSimpleButton(
-//   "zoomOutButton",
-//   "Zoom Out"
-// );
-// zoomOutButton.width = "100px";
-// zoomOutButton.height = "40px";
-// zoomOutButton.color = "white";
-// zoomOutButton.background = "blue";
-// zoomOutButton.onPointerUpObservable.add(() => {
-//   camera.fov = Math.min(Math.PI / 2, camera.fov + 0.1);
-// });
-// stackPanel.addControl(zoomOutButton);
-
-// Create a rotation animation
-// let isRotationPlaying = true;
-// let rotationSpeed = 0.00001; // Adjust as needed for faster/slower rotation
-
-// Create the rotation button
-// const rotationButton = Button.CreateSimpleButton(
-//   "rotationButton",
-//   "Pause"
-// );
-// rotationButton.width = "100px";
-// rotationButton.height = "40px";
-// rotationButton.color = "white";
-// rotationButton.background = "purple";
-// rotationButton.onPointerUpObservable.add(() => {
-//   isRotationPlaying = !isRotationPlaying;
-//   rotationButton.textBlock.text = isRotationPlaying
-//     ? "Pause"
-//     : "Play";
-// });
-// stackPanel.addControl(rotationButton);
-
-// Update camera rotation in the render loop based on isRotationPlaying
 // scene.onBeforeRenderObservable.add(() => {
-//   //dome.imageMode = PhotoDome.MODE_SIDEBYSIDE;
-//   // if (isRotationPlaying) {
-//   //   camera.rotation.y += rotationSpeed;
-//   // }
+//   
 // });
