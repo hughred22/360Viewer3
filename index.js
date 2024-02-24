@@ -18,12 +18,26 @@ import {
   Control
 } from "@babylonjs/gui";
 
+import { WebXRDefaultExperience } from '@babylonjs/core/XR/webXRDefaultExperience.js'
+
+// Enable GLTF/GLB loader for loading controller models from WebXR Input registry
+import '@babylonjs/loaders/glTF'
+
+// Without this next import, an error message like this occurs loading controller models:
+//  Build of NodeMaterial failed" error when loading controller model
+//  Uncaught (in promise) Build of NodeMaterial failed: input rgba from block
+//  FragmentOutput[FragmentOutputBlock] is not connected and is not optional.
+import '@babylonjs/core/Materials/Node/Blocks'
+
 import borghese from "./assets/forFacebook-8K-LA.jpg";
 import alps from "./assets/italy.jpg";
 
 const canvas = document.getElementById("renderCanvas");
 const engine = new Engine(canvas, true);
+
 const scene = new Scene(engine);
+//var xrHelper = scene.createDefaultXRExperienceAsync();
+var vrHelper = scene.createDefaultVRExperience();
 new HemisphericLight("hemiLight", new Vector3(0, 1, 0));
 
 const camera = new UniversalCamera(
@@ -39,6 +53,7 @@ engine.runRenderLoop(() => {
 window.addEventListener("resize", () => {
   engine.resize();
 });
+
 
 // Create the PhotoDome
 let dome = new PhotoDome(
