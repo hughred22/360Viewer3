@@ -80,7 +80,7 @@
 // import dubai from "./assets/Dubai.jpg";
 // import inTandem from "./assets/in_tandem_3d360.mp4";
 
-        var athen3d = import.meta.env.BASE_URL + "assets/Athen-3D.jpg";
+        
         var losAngeles = "./360Viewer3/assets/forFacebook-8K-LA.jpg";
         
 
@@ -94,6 +94,7 @@
             camera.attachControl(canvas, true);
             camera.inputs.attached.mousewheel.detachControl(canvas);
             var vrHelper = scene.createDefaultVRExperience();
+            var athen3d = import.meta.env.BASE_URL + "assets/Athen-3D.jpg";
         
             var dome = new BABYLON.PhotoDome(
                 "testdome",
