@@ -5,6 +5,7 @@ import {
   HemisphericLight,
   Texture,
   PhotoDome,
+  VideoDome,
   Animation,
   UniversalCamera,
 } from "@babylonjs/core";
@@ -34,9 +35,11 @@ import losAngeles from "./assets/forFacebook-8K-LA.jpg";
 import athens from "./assets/Athens-8K.jpg";
 import lakeTahao from "./assets/LakeTahao-10K.jpg";
 import romeChruch from "./assets/bigchurch.jpg";
-import athen3d from "./assets/Athen-3D.jpg";
-import dubai from "./assets/Dubai.jpg";
+//import athen3d from "./assets/Athen-3D.jpg";
+//import dubai from "./assets/Dubai.jpg";
 import inTandem from "./assets/in_tandem_3d360.mp4";
+//import lakeTahao4k360video from "./assets/LakeTahao-4K-360.mp4";
+import lakeTahao8k360video from "./assets/LakeTahao-8K-short-360.mp4";
 
 
 const canvas = document.getElementById("renderCanvas");
@@ -44,7 +47,8 @@ const engine = new Engine(canvas, true);
 
 const scene = new Scene(engine);
 //var xrHelper = scene.createDefaultXRExperienceAsync();
-var vrHelper = scene.createDefaultVRExperience();
+//var vrHelper = scene.createDefaultVRExperience();
+var vrHelper = scene.createDefaultVRExperience({createDeviceOrientationCamera:false}); 
 //new HemisphericLight("hemiLight", new Vector3(0, 1, 0));
 
 const camera = new UniversalCamera(
@@ -63,172 +67,185 @@ window.addEventListener("resize", () => {
 
 
 // Create the PhotoDome
-var dome = new PhotoDome(
-  "sphere",
-  "https://i.imgur.com/nI1VPdJ.jpg",
+// var dome = new PhotoDome(
+//   "sphere",
+//   losAngeles,
+//   {
+//     resolution: 64,
+//     size: 1000,
+//     //halfDomeMode: true,
+//     useDirectMapping: false
+//   },
+//   scene
+// );
+// dome.imageMode = PhotoDome.MODE_MONOSCOPIC;
+
+// Create the VideoDome
+var videoDome = new VideoDome(
+  "videoSphere",
+  lakeTahao8k360video,
   {
     resolution: 64,
     size: 1000,
-    //halfDomeMode: true,
+    clickToPlay: true,
     useDirectMapping: false
   },
   scene
 );
-dome.imageMode = PhotoDome.MODE_TOPBOTTOM;
+//videoDome.imageMode = VideoDome.MODE_TOPBOTTOM;
+vrHelper.enableInteractions();
 
-//dome.imageMode = PhotoDome.MODE_TOPBOTTOM = 1;
+// Create a GUI texture
+const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
+  "UI"
+);
 
-// // Create a GUI texture
-// const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
-//   "UI"
-// );
+// Create a stack panel to hold the buttons
+const stackPanel = new StackPanel();
+stackPanel.width = "300px";
+stackPanel.horizontalAlignment =
+  Control.HORIZONTAL_ALIGNMENT_RIGHT;
+stackPanel.verticalAlignment =
+  Control.VERTICAL_ALIGNMENT_CENTER;
+advancedTexture.addControl(stackPanel);
 
-// // Create a stack panel to hold the buttons
-// const stackPanel = new StackPanel();
-// stackPanel.width = "300px";
-// stackPanel.horizontalAlignment =
-//   Control.HORIZONTAL_ALIGNMENT_RIGHT;
-// stackPanel.verticalAlignment =
-//   Control.VERTICAL_ALIGNMENT_CENTER;
-// advancedTexture.addControl(stackPanel);
+// Create the buttons
+const button1 = Button.CreateSimpleButton(
+  "button1",
+  "Los Angeles"
+);
+button1.width = "200px";
+button1.height = "100px";
+button1.paddingBottom ="30px";
+button1.cornerRadius="10";
+button1.shadowColor="black";
+button1.shadowOffsetX="2";
+button1.shadowOffsetY="2";
+button1.shadowBlur="30";
+button1.color = "white";
+button1.thickness = 2;
+button1.background = "gray";
+button1.alpha = "0.5";
+button1.onPointerUpObservable.add(() => {
+  button1.thickness = 2;
+  button2.thickness = 0;
+  transition(losAngeles);
+});
+stackPanel.addControl(button1);
 
-// // Create the buttons
-// const button1 = Button.CreateSimpleButton(
-//   "button1",
-//   "Los Angeles"
-// );
-// button1.width = "200px";
-// button1.height = "100px";
-// button1.paddingBottom ="30px";
-// button1.cornerRadius="10";
-// button1.shadowColor="black";
-// button1.shadowOffsetX="2";
-// button1.shadowOffsetY="2";
-// button1.shadowBlur="30";
-// button1.color = "white";
-// button1.thickness = 2;
-// button1.background = "gray";
-// button1.alpha = "0.5";
-// button1.onPointerUpObservable.add(() => {
-//   button1.thickness = 2;
-//   button2.thickness = 0;
-//   transition(losAngeles);
-// });
-// stackPanel.addControl(button1);
+const button2 = Button.CreateSimpleButton(
+  "button2",
+  "Athens, Greece"
+);
+button2.width = "200px";
+button2.height = "100px";
+button2.paddingBottom ="30px";
+button2.cornerRadius="10";
+button2.shadowColor="black";
+button2.shadowOffsetX="2";
+button2.shadowOffsetY="2";
+button2.shadowBlur="30";
+button2.color = "white";
+button2.thickness = 0;
+button2.background = "gray";
+button2.alpha = "0.5";
+button2.onPointerUpObservable.add(() => {
+  button1.thickness = 0;
+  button2.thickness = 2;
+  transition(athens);
+});
+stackPanel.addControl(button2);
 
-// const button2 = Button.CreateSimpleButton(
-//   "button2",
-//   "Athens, Greece"
-// );
-// button2.width = "200px";
-// button2.height = "100px";
-// button2.paddingBottom ="30px";
-// button2.cornerRadius="10";
-// button2.shadowColor="black";
-// button2.shadowOffsetX="2";
-// button2.shadowOffsetY="2";
-// button2.shadowBlur="30";
-// button2.color = "white";
-// button2.thickness = 0;
-// button2.background = "gray";
-// button2.alpha = "0.5";
-// button2.onPointerUpObservable.add(() => {
-//   button1.thickness = 0;
-//   button2.thickness = 2;
-//   transition(athens);
-// });
-// stackPanel.addControl(button2);
+const button3 = Button.CreateSimpleButton(
+  "button3",
+  "3D 360 Photo"
+);
+button3.width = "200px";
+button3.height = "100px";
+button3.paddingBottom ="30px";
+button3.cornerRadius="10";
+button3.shadowColor="black";
+button3.shadowOffsetX="2";
+button3.shadowOffsetY="2";
+button3.shadowBlur="30";
+button3.color = "white";
+button3.thickness = 0;
+button3.background = "gray";
+button3.alpha = "0.5";
+button3.onPointerUpObservable.add(() => {
+  button1.thickness = 0;
+  button2.thickness = 0;
+  button3.thickness = 2;
+  transition(athen3d);
+});
+stackPanel.addControl(button3);
 
-// const button3 = Button.CreateSimpleButton(
-//   "button3",
-//   "3D 360 Photo"
-// );
-// button3.width = "200px";
-// button3.height = "100px";
-// button3.paddingBottom ="30px";
-// button3.cornerRadius="10";
-// button3.shadowColor="black";
-// button3.shadowOffsetX="2";
-// button3.shadowOffsetY="2";
-// button3.shadowBlur="30";
-// button3.color = "white";
-// button3.thickness = 0;
-// button3.background = "gray";
-// button3.alpha = "0.5";
-// button3.onPointerUpObservable.add(() => {
-//   button1.thickness = 0;
-//   button2.thickness = 0;
-//   button3.thickness = 2;
-//   transition(athen3d);
-// });
-// stackPanel.addControl(button3);
+const transition = (image) => {
+  let anim = scene.beginDirectAnimation(
+    dome.mesh,
+    [fadeOutAnimation],
+    0,
+    120,
+    false
+  );
+  anim.onAnimationEnd = () => loadNewTexture(image);
+};
 
-// const transition = (image) => {
-//   let anim = scene.beginDirectAnimation(
-//     dome.mesh,
-//     [fadeOutAnimation],
-//     0,
-//     120,
-//     false
-//   );
-//   anim.onAnimationEnd = () => loadNewTexture(image);
-// };
+const loadNewTexture = (image) => {
+  const newTexture = new Texture(image, scene);
+  newTexture.onLoadObservable.add(() => {
+    dome.dispose();
 
-// const loadNewTexture = (image) => {
-//   const newTexture = new Texture(image, scene);
-//   newTexture.onLoadObservable.add(() => {
-//     dome.dispose();
-
-//     // Create a new dome with the new texture
-//     dome = new PhotoDome(
-//       "sphere",
-//       image,
-//       {
-//         resolution: 128,
-//         size: 1000,
-//         useDirectMapping: false
-//       },
-//       scene
-//     );
+    // Create a new dome with the new texture
+    dome = new PhotoDome(
+      "sphere",
+      image,
+      {
+        resolution: 128,
+        size: 1000,
+        useDirectMapping: false
+      },
+      scene
+    );
     
-//     dome.mesh.material.alpha = 0;
-//     dome.imageMode = PhotoDome.MODE_TOPBOTTOM;
-//     scene.beginDirectAnimation(
-//       dome.mesh,
-//       [fadeInAnimation],
-//       0,
-//       120,
-//       false
-//     );
-//   });
-// };
+    dome.mesh.material.alpha = 0;
+    dome.imageMode = PhotoDome.MODE_TOPBOTTOM;
+    scene.beginDirectAnimation(
+      dome.mesh,
+      [fadeInAnimation],
+      0,
+      120,
+      false
+    );
+  });
+};
 
-// const fadeOutAnimation = new Animation(
-//   "fadeOut",
-//   "material.alpha",
-//   40,
-//   Animation.ANIMATIONTYPE_FLOAT,
-//   Animation.ANIMATIONLOOPMODE_CONSTANT
-// );
+const fadeOutAnimation = new Animation(
+  "fadeOut",
+  "material.alpha",
+  40,
+  Animation.ANIMATIONTYPE_FLOAT,
+  Animation.ANIMATIONLOOPMODE_CONSTANT
+);
 
-// fadeOutAnimation.setKeys([
-//   { frame: 0, value: 1 },
-//   { frame: 120, value: 0 }
-// ]);
+fadeOutAnimation.setKeys([
+  { frame: 0, value: 1 },
+  { frame: 120, value: 0 }
+]);
 
-// const fadeInAnimation = new Animation(
-//   "fadeIn",
-//   "material.alpha",
-//   40,
-//   Animation.ANIMATIONTYPE_FLOAT,
-//   Animation.ANIMATIONLOOPMODE_CONSTANT
-// );
+const fadeInAnimation = new Animation(
+  "fadeIn",
+  "material.alpha",
+  40,
+  Animation.ANIMATIONTYPE_FLOAT,
+  Animation.ANIMATIONLOOPMODE_CONSTANT
+);
 
-// fadeInAnimation.setKeys([
-//   { frame: 0, value: 0 },
-//   { frame: 120, value: 1 }
-// ]);
-// Assume `scene` is your Babylon.js scene
+fadeInAnimation.setKeys([
+  { frame: 0, value: 0 },
+  { frame: 120, value: 1 }
+]);
+//Assume `scene` is your Babylon.js scene
 
 // Create the zoom in button
 // var zoomInButton = Button.CreateSimpleButton(
