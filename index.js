@@ -18,7 +18,6 @@ import {
   Button,
   Control
 } from "@babylonjs/gui";
-import * as BABYLON from "@babylonjs/core";
 
 import { WebXRDefaultExperience } from '@babylonjs/core/XR/webXRDefaultExperience.js'
 
@@ -66,7 +65,7 @@ window.addEventListener("resize", () => {
 // Create the PhotoDome
 var dome = new PhotoDome(
   "sphere",
-  athen3d,
+  "https://i.imgur.com/nI1VPdJ.jpg",
   {
     resolution: 64,
     size: 1000,
@@ -75,7 +74,7 @@ var dome = new PhotoDome(
   },
   scene
 );
-dome.imageMode = BABYLON.PhotoDome.MODE_TOPBOTTOM;
+dome.imageMode = PhotoDome.MODE_TOPBOTTOM;
 
 //dome.imageMode = PhotoDome.MODE_TOPBOTTOM = 1;
 
