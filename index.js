@@ -34,11 +34,6 @@ import '@babylonjs/core/Materials/Node/Blocks'
 import losAngeles from "./assets/forFacebook-8K-LA.jpg";
 import athens from "./assets/Athens-8K.jpg";
 import lakeTahao from "./assets/LakeTahao-10K.jpg";
-import romeChruch from "./assets/bigchurch.jpg";
-//import athen3d from "./assets/Athen-3D.jpg";
-//import dubai from "./assets/Dubai.jpg";
-import inTandem from "./assets/in_tandem_3d360.mp4";
-//import lakeTahao4k360video from "./assets/LakeTahao-4K-360.mp4";
 import lakeTahao8k360video from "./assets/LakeTahao-8K-short-360.mp4";
 
 
@@ -67,31 +62,31 @@ window.addEventListener("resize", () => {
 
 
 // Create the PhotoDome
-// var dome = new PhotoDome(
-//   "sphere",
-//   losAngeles,
-//   {
-//     resolution: 64,
-//     size: 1000,
-//     //halfDomeMode: true,
-//     useDirectMapping: false
-//   },
-//   scene
-// );
-// dome.imageMode = PhotoDome.MODE_MONOSCOPIC;
-
-// Create the VideoDome
-var videoDome = new VideoDome(
-  "videoSphere",
-  lakeTahao8k360video,
+var dome = new PhotoDome(
+  "sphere",
+  losAngeles,
   {
     resolution: 64,
     size: 1000,
-    clickToPlay: true,
+    //halfDomeMode: true,
     useDirectMapping: false
   },
   scene
 );
+dome.imageMode = PhotoDome.MODE_MONOSCOPIC;
+
+// Create the VideoDome
+// var videoDome = new VideoDome(
+//   "videoSphere",
+//   lakeTahao8k360video,
+//   {
+//     resolution: 64,
+//     size: 1000,
+//     clickToPlay: true,
+//     useDirectMapping: false
+//   },
+//   scene
+// );
 //videoDome.imageMode = VideoDome.MODE_TOPBOTTOM;
 vrHelper.enableInteractions();
 
@@ -129,6 +124,8 @@ button1.alpha = "0.5";
 button1.onPointerUpObservable.add(() => {
   button1.thickness = 2;
   button2.thickness = 0;
+  button3.thickness = 0;
+  button4.thickness = 0;
   transition(losAngeles);
 });
 stackPanel.addControl(button1);
@@ -152,13 +149,15 @@ button2.alpha = "0.5";
 button2.onPointerUpObservable.add(() => {
   button1.thickness = 0;
   button2.thickness = 2;
+  button3.thickness = 0;
+  button4.thickness = 0;
   transition(athens);
 });
 stackPanel.addControl(button2);
 
 const button3 = Button.CreateSimpleButton(
   "button3",
-  "3D 360 Photo"
+  "Lake Tahoe"
 );
 button3.width = "200px";
 button3.height = "100px";
@@ -176,9 +175,35 @@ button3.onPointerUpObservable.add(() => {
   button1.thickness = 0;
   button2.thickness = 0;
   button3.thickness = 2;
-  transition(athen3d);
+  button4.thickness = 0;
+  transition(lakeTahao);
 });
 stackPanel.addControl(button3);
+
+const button4 = Button.CreateSimpleButton(
+  "button4",
+  "360 Video"
+);
+button4.width = "200px";
+button4.height = "100px";
+button4.paddingBottom ="30px";
+button4.cornerRadius="10";
+button4.shadowColor="black";
+button4.shadowOffsetX="2";
+button4.shadowOffsetY="2";
+button4.shadowBlur="30";
+button4.color = "white";
+button4.thickness = 0;
+button4.background = "gray";
+button4.alpha = "0.5";
+button4.onPointerUpObservable.add(() => {
+  button1.thickness = 0;
+  button2.thickness = 0;
+  button3.thickness = 0;
+  button4.thickness = 2
+  transitionVideo(lakeTahao);
+});
+stackPanel.addControl(button4);
 
 const transition = (image) => {
   let anim = scene.beginDirectAnimation(
@@ -189,6 +214,17 @@ const transition = (image) => {
     false
   );
   anim.onAnimationEnd = () => loadNewTexture(image);
+};
+
+const transitionVideo = (video) => {
+  let anim = scene.beginDirectAnimation(
+    dome.mesh,
+    [fadeOutAnimation],
+    0,
+    120,
+    false
+  );
+  anim.onAnimationEnd = () => loadNewVideoTexture(video);
 };
 
 const loadNewTexture = (image) => {
@@ -203,6 +239,47 @@ const loadNewTexture = (image) => {
       {
         resolution: 128,
         size: 1000,
+        useDirectMapping: false
+      },
+      scene
+    );
+    
+    dome.mesh.material.alpha = 0;
+    dome.imageMode = PhotoDome.MODE_TOPBOTTOM;
+    scene.beginDirectAnimation(
+      dome.mesh,
+      [fadeInAnimation],
+      0,
+      120,
+      false
+    );
+  });
+};
+
+const loadNewVideoTexture = (video) => {
+  const newTexture = new Texture(video, scene);
+  newTexture.onLoadObservable.add(() => {
+    dome.dispose();
+
+    // Create a new dome with the new texture
+    // dome = new PhotoDome(
+    //   "sphere",
+    //   image,
+    //   {
+    //     resolution: 128,
+    //     size: 1000,
+    //     useDirectMapping: false
+    //   },
+    //   scene
+    // );
+    // Create the VideoDome
+    dome = new VideoDome(
+      "videoSphere",
+      lakeTahao8k360video,
+      {
+        resolution: 64,
+        size: 1000,
+        clickToPlay: true,
         useDirectMapping: false
       },
       scene
